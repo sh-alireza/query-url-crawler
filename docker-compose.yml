@@ -1,0 +1,44 @@
+version: '3.3'
+
+services:
+    query_url_crawler:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: query_url_crawler:v3
+        hostname: query_url_crawler
+        container_name: query_url_crawler
+        restart: always
+        environment:
+            - SITE_LIMIT=20
+            - BROKER_SERVICE_HOST=myrabbit
+            - CRAWLER_SERVICE_HOST=query_url_crawler
+            - WORKER_COUNT=4
+        networks:
+            - services_net
+        depends_on:
+            - myrabbit
+        volumes:
+            - query_crawler_outs:/outputs
+            # - /home/alireza/search-website/query-url-crawler/outputs:/outputs
+        ports:
+            - 8091:8080
+
+    myrabbit:
+        image: rabbitmq
+        hostname: myrabbit
+        container_name: myrabbit
+        restart: always
+        networks:
+            - services_net
+        environment:
+            - RABBITMQ_DEFAULT_USER=admin
+            - RABBITMQ_DEFAULT_PASS=admin
+
+networks:
+  services_net:
+    external: True
+
+volumes:
+  query_crawler_outs:
+    external: True
