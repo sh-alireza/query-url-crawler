@@ -20,7 +20,6 @@ services:
             - myrabbit
         volumes:
             - query_crawler_outs:/outputs
-            # - /home/alireza/search-website/query-url-crawler/outputs:/outputs
         ports:
             - 8091:8080
 
